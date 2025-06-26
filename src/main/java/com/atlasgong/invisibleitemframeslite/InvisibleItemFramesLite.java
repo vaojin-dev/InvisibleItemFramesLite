@@ -121,7 +121,7 @@ public class InvisibleItemFramesLite extends JavaPlugin {
         ItemStack regIs = ItemFrameRegistry.getInstance().getRegularInvisibleFrame();
 
         ShapelessRecipe recipe = new ShapelessRecipe(key, glowIs.clone());
-        recipe.addIngredient(Utils.getNewMaterial("GLOW_INK_SAC", Material.INK_SAC));
+        recipe.addIngredient(Material.GLOW_INK_SAC);
 
         recipe.addIngredient(new RecipeChoice.ExactChoice(regIs.clone()));
 
