@@ -20,7 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class InvisibleItemFramesLite extends JavaPlugin {
 
@@ -59,9 +58,6 @@ public class InvisibleItemFramesLite extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Version sv = getServerVersion();
-        getLogger().log(Level.INFO, "Detected server running on " + sv.minor + "," + sv.patch);
-
         // register listeners
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ItemFramePlaceListener(IS_INVISIBLE_KEY), this);
@@ -73,10 +69,8 @@ public class InvisibleItemFramesLite extends JavaPlugin {
         saveDefaultConfig();
         loadConfig(IS_INVISIBLE_KEY);
 
-        if (sv.minor >= 17) {
-            // register shapeless glow item frame recipe
-            registerShapelessGlowRecipe(SHAPELESS_GLOW_RECIPE_KEY);
-        }
+        // register shapeless glow item frame recipe
+        registerShapelessGlowRecipe(SHAPELESS_GLOW_RECIPE_KEY);
 
         firstLoad = false;
 
@@ -129,7 +123,6 @@ public class InvisibleItemFramesLite extends JavaPlugin {
         ShapelessRecipe recipe = new ShapelessRecipe(key, glowIs.clone());
         recipe.addIngredient(Utils.getNewMaterial("GLOW_INK_SAC", Material.INK_SAC));
 
-        //noinspection deprecation, undeprecated in 1.16.5
         recipe.addIngredient(new RecipeChoice.ExactChoice(regIs.clone()));
 
         Bukkit.addRecipe(recipe);
@@ -159,44 +152,25 @@ public class InvisibleItemFramesLite extends JavaPlugin {
         assert regularRecipe != null;
         addRecipeFromConfig(REGULAR_RECIPE_KEY, regularRecipe, ItemFrameRegistry.getInstance().getRegularInvisibleFrame());
 
-        // add glow item frame only if on versions 1.17+
-        if (getServerVersion().minor >= 17) {
-            config.addDefault("items.invisible_glow_item_frame.name", ChatColor.RESET + "Invisible Glow Item Frame");
-            config.addDefault("recipes.invisible_glow_item_frame.count", 8);
-            config.addDefault("recipes.invisible_glow_item_frame.glint", true);
-            config.addDefault("recipes.invisible_glow_item_frame.shape", Arrays.asList("FFF", "FAF", "FFF"));
-            config.addDefault("recipes.invisible_glow_item_frame.ingredients.F", "minecraft:glow_item_frame");
-            config.addDefault("recipes.invisible_glow_item_frame.ingredients.A", "minecraft:phantom_membrane");
+        config.addDefault("items.invisible_glow_item_frame.name", ChatColor.RESET + "Invisible Glow Item Frame");
+        config.addDefault("recipes.invisible_glow_item_frame.count", 8);
+        config.addDefault("recipes.invisible_glow_item_frame.glint", true);
+        config.addDefault("recipes.invisible_glow_item_frame.shape", Arrays.asList("FFF", "FAF", "FFF"));
+        config.addDefault("recipes.invisible_glow_item_frame.ingredients.F", "minecraft:glow_item_frame");
+        config.addDefault("recipes.invisible_glow_item_frame.ingredients.A", "minecraft:phantom_membrane");
 
-            ConfigurationSection glowItem = config.getConfigurationSection("items.invisible_glow_item_frame");
-            assert glowItem != null;
-            String gName = glowItem.getString("name");
-            List<String> gLore = glowItem.getStringList("lore");
-            boolean gEnchantmentGlint = glowItem.getBoolean("enchantment_glint");
+        ConfigurationSection glowItem = config.getConfigurationSection("items.invisible_glow_item_frame");
+        assert glowItem != null;
+        String gName = glowItem.getString("name");
+        List<String> gLore = glowItem.getStringList("lore");
+        boolean gEnchantmentGlint = glowItem.getBoolean("enchantment_glint");
 
-            // register frame with registry
-            ItemFrameRegistry.getInstance().registerGlowInvisibleItemFrame(IS_INVISIBLE_KEY, gName, gLore, gEnchantmentGlint);
+        // register frame with registry
+        ItemFrameRegistry.getInstance().registerGlowInvisibleItemFrame(IS_INVISIBLE_KEY, gName, gLore, gEnchantmentGlint);
 
-            ConfigurationSection glowRecipe = config.getConfigurationSection("recipes.invisible_glow_item_frame");
-            assert glowRecipe != null;
-            addRecipeFromConfig(GLOW_RECIPE_KEY, glowRecipe, ItemFrameRegistry.getInstance().getGlowInvisibleFrame());
-        }
-    }
-
-    private Version getServerVersion() {
-        String[] parts = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
-        int minor = Integer.parseInt(parts[1]);
-        int patch = Integer.parseInt(parts[2]);
-        return new Version(minor, patch);
-    }
-
-    private static class Version {
-        final int minor, patch;
-
-        Version(int minor, int patch) {
-            this.minor = minor;
-            this.patch = patch;
-        }
+        ConfigurationSection glowRecipe = config.getConfigurationSection("recipes.invisible_glow_item_frame");
+        assert glowRecipe != null;
+        addRecipeFromConfig(GLOW_RECIPE_KEY, glowRecipe, ItemFrameRegistry.getInstance().getGlowInvisibleFrame());
     }
 
 }
