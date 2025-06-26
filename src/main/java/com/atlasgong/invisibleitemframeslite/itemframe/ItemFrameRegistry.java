@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Singleton registry responsible for creating and storing custom invisible item frames
- * using a version-specific {@link ItemFrameFactory}.
+ * using an {@link ItemFrameFactory}.
  * <p>
  * Call {@link #init(ItemFrameFactory)} once at plugin startup to initialize the registry.
  * Access later using {@link #getInstance()}.
