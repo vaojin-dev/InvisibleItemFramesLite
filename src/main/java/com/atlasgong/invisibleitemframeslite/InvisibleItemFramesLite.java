@@ -1,7 +1,5 @@
 package com.atlasgong.invisibleitemframeslite;
 
-import com.atlasgong.invisibleitemframeslite.itemframe.ItemFrameFactory;
-import com.atlasgong.invisibleitemframeslite.itemframe.ItemFrameRegistry;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameBreakListener;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameCraftListener;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameInteractionListener;
@@ -63,10 +61,6 @@ public class InvisibleItemFramesLite extends JavaPlugin {
     public void onEnable() {
         Version sv = getServerVersion();
         getLogger().log(Level.INFO, "Detected server running on " + sv.minor + "," + sv.patch);
-
-        // instantiate registry
-        ItemFrameFactory itemFrameFactory = new ItemFrameFactory();
-        ItemFrameRegistry.init(itemFrameFactory);
 
         // register listeners
         PluginManager pm = this.getServer().getPluginManager();

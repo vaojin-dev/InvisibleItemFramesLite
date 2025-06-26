@@ -1,57 +1,38 @@
-package com.atlasgong.invisibleitemframeslite.itemframe;
+package com.atlasgong.invisibleitemframeslite;
 
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
+import java.util.Objects;
 
 
 /**
- * Singleton registry responsible for creating and storing custom invisible item frames
- * using an {@link ItemFrameFactory}.
+ * Singleton registry responsible for creating and storing custom invisible item frames.
  * <p>
- * Call {@link #init(ItemFrameFactory)} once at plugin startup to initialize the registry.
- * Access later using {@link #getInstance()}.
+ * Access using {@link #getInstance()}.
  */
 public class ItemFrameRegistry {
     private static ItemFrameRegistry instance;
 
-    private final ItemFrameFactory factory;
     private ItemStack regInvisibleFrame;
     private ItemStack glowInvisibleFrame;
 
-    /**
-     * Private constructor to enforce singleton pattern.
-     *
-     * @param factory the item frame factory used to generate item frames
-     */
-    private ItemFrameRegistry(ItemFrameFactory factory) {
-        this.factory = factory;
+    /** Private constructor to enforce the singleton pattern. */
+    private ItemFrameRegistry() {
     }
 
     /**
-     * Initializes the singleton instance of the registry.
-     * Should be called only once, typically during plugin startup.
-     *
-     * @param factory the version-specific factory used to create item frames
-     * @throws IllegalStateException if the registry has already been initialized
-     */
-    public static void init(ItemFrameFactory factory) {
-        if (instance != null) {
-            throw new IllegalStateException("ItemFrameRegistry is already initialized.");
-        }
-        instance = new ItemFrameRegistry(factory);
-    }
-
-    /**
-     * Returns the singleton instance of the registry.
+     * Returns the existing singleton instance of the registry, or creates one if it does not yet exist.
      *
      * @return the initialized {@link ItemFrameRegistry}
-     * @throws IllegalStateException if the registry has not been initialized yet
      */
     public static ItemFrameRegistry getInstance() {
         if (instance == null) {
-            throw new IllegalStateException("ItemFrameRegistry not initialized. Call init() first.");
+            instance = new ItemFrameRegistry();
         }
         return instance;
     }
@@ -66,7 +47,7 @@ public class ItemFrameRegistry {
      */
     public void registerRegularInvisibleItemFrame(NamespacedKey isInvisibleKey, String name, List<String> lore,
                                                   boolean enchantmentGlint) {
-        regInvisibleFrame = factory.create(isInvisibleKey, name, lore, enchantmentGlint, false);
+        regInvisibleFrame = create(isInvisibleKey, name, lore, enchantmentGlint, false);
     }
 
     /**
@@ -79,7 +60,7 @@ public class ItemFrameRegistry {
      */
     public void registerGlowInvisibleItemFrame(NamespacedKey isInvisibleKey, String name, List<String> lore,
                                                boolean enchantmentGlint) {
-        glowInvisibleFrame = factory.create(isInvisibleKey, name, lore, enchantmentGlint, true);
+        glowInvisibleFrame = create(isInvisibleKey, name, lore, enchantmentGlint, true);
     }
 
     /**
@@ -98,6 +79,34 @@ public class ItemFrameRegistry {
      */
     public ItemStack getGlowInvisibleFrame() {
         return glowInvisibleFrame.clone();
+    }
+
+    /**
+     * Creates an invisible item frame.
+     *
+     * @param isInvisibleKey   The namespaced key to store invisibility status.
+     * @param name             The configurable display name for the item.
+     * @param lore             The configurable optional lore for the item.
+     * @param enchantmentGlint Whether the item should have an enchantment glint.
+     * @param glow             Whether to create a glow item frame instead of a regular item frame.
+     * @return An invisible item frame.
+     */
+    public ItemStack create(NamespacedKey isInvisibleKey, String name, List<String> lore,
+                            boolean enchantmentGlint, boolean glow) {
+        Material type = glow ? Material.GLOW_ITEM_FRAME : Material.ITEM_FRAME;
+        ItemStack item = new ItemStack(type, 1);
+
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta, "ItemMeta was unexpectedly null.");
+
+        meta.setDisplayName(name);
+        meta.setLore(lore);
+        meta.getPersistentDataContainer()
+                .set(isInvisibleKey, PersistentDataType.BYTE, (byte) 1);
+        meta.setEnchantmentGlintOverride(enchantmentGlint);
+
+        item.setItemMeta(meta);
+        return item;
     }
 
 }
