@@ -1,12 +1,10 @@
-# Customization of the appearance of the item.
+# configuration of item metadata
 items:
   invisible_item_frame:
-    # What the name of the item should be.
-    name: §rInvisible Item Frame
-    # if the item should have an enchantment glint
-    enchantment_glint: true
+    name: §rInvisible Item Frame # what the name of the item should be
+    enchantment_glint: true # if the item should have an enchantment glint
 
-    # Uncomment to assign lore text for the item.
+    # uncomment the below to assign lore text for the item
     #lore:
     #  - line1
     #  - line2
@@ -15,23 +13,24 @@ items:
     name: §rInvisible Glow Item Frame
     enchantment_glint: true
 
-# Customization for the crafting recipe.
+# configuration for crafting recipes
 recipes:
   invisible_item_frame:
 
-    # Shape to use for crafting recipe. Spaces are empty slots, and for a smaller than 3x3
-    # recipe you can use a smaller grid. Letters are interpreted by the ingredients list below.
+    # shape to use for the crafting recipe
+    # - spaces are empty slots, and for a smaller than 3x3 recipe you can use a smaller grid
+    # - letters are interpreted by the ingredients list below
     shape:
       - FFF
       - FAF
       - FFF
 
-    # Items that are required for crafting.
+    # items required for crafting, matching the letters in the shape as defined above
     ingredients:
       F: minecraft:item_frame
       A: minecraft:phantom_membrane
 
-    # How many of the item should be produced by the recipe.
+    # how many of the item should be produced by the recipe.
     count: 8
 
   invisible_glow_item_frame:
