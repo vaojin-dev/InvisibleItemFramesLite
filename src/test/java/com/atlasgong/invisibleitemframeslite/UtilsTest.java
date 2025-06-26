@@ -45,7 +45,7 @@ class UtilsTest {
     }
 
     @Test
-    void testIsInvisibleItemFrame() {
+    void testIsInvisibleItemFrame_withItemStack() {
         // test with native item frame
         ItemStack nativeFrame = new ItemStack(Material.ITEM_FRAME);
         assert !Utils.isInvisibleItemFrame(nativeFrame, isInvisibleKey);
@@ -64,7 +64,7 @@ class UtilsTest {
     }
 
     @Test
-    void testIsInvisibleItemFrameWithEntity() {
+    void testIsInvisibleItemFrame_withEntity() {
         World w = server.createWorld(new WorldCreator("world"));
         assert w != null;
         Location loc = new Location(w, 0, 64, 0);
