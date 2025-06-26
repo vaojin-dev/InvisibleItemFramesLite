@@ -1,7 +1,7 @@
 package com.atlasgong.invisibleitemframeslite.listeners;
 
+import com.atlasgong.invisibleitemframeslite.ItemFrameRegistry;
 import com.atlasgong.invisibleitemframeslite.Utils;
-import com.atlasgong.invisibleitemframeslite.itemframe.ItemFrameRegistry;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
