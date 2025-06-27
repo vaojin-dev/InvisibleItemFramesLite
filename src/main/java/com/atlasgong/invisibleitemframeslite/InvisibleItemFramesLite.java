@@ -6,6 +6,7 @@ import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameInteractionListe
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFramePlaceListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -141,6 +142,7 @@ public class InvisibleItemFramesLite extends JavaPlugin {
 
     /**
      * Loads frame data from a given configuration section, deserializing text using MiniMessage.
+     * The client code is expected to call `addConfigDefaults()` before this function.
      *
      * @param section The configuration section containing the item's data.
      * @return An {@link ItemFrameData} object containing the name, lore, and glint flag.
@@ -148,13 +150,29 @@ public class InvisibleItemFramesLite extends JavaPlugin {
     private ItemFrameData loadFrameData(ConfigurationSection section) {
         // get name, lore, and glint from config
         String name = section.getString("name");
+        assert name != null;
         List<String> lore = section.getStringList("lore");
         boolean glint = section.getBoolean("enchantment_glint");
 
         // translate strings to components
-        Component nameComponent = MiniMessage.miniMessage().deserialize(name);
+
+        // get legacy component serializer for legacy config
+        LegacyComponentSerializer lcs = LegacyComponentSerializer.legacy('§');
+
+        Component nameComponent;
+        if (name.contains("§")) { // if string incl legacy characters
+            nameComponent = lcs.deserialize(name);
+        } else {
+            nameComponent = MiniMessage.miniMessage().deserialize(name);
+        }
+
         List<Component> loreComponents = lore.stream()
-                .map(MiniMessage.miniMessage()::deserialize)
+                .map(line -> {
+                    if (line.contains("§")) {
+                        return lcs.deserialize(line);
+                    }
+                    return MiniMessage.miniMessage().deserialize(line);
+                })
                 .toList();
 
         return new ItemFrameData(nameComponent, loreComponents, glint);
