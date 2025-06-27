@@ -17,6 +17,8 @@ import org.mockbukkit.mockbukkit.ServerMock;
 
 import java.lang.reflect.Field;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class UtilsTest {
 
     private ServerMock server;
@@ -83,6 +85,23 @@ class UtilsTest {
         // test with non-ItemFrame entity
         org.bukkit.entity.Entity nonFrameEntity = w.spawnEntity(loc.add(2, 0, 0), EntityType.ZOMBIE);
         assert !Utils.isInvisibleItemFrame(nonFrameEntity, isInvisibleKey);
+    }
+    
+    @Test
+    void testToTitleCase_withExpectedString() {
+        assert Utils.toTitleCase("invisible item frame").equals("Invisible Item Frame");
+    }
+
+    @Test
+    void testToTitleCase_withUnexpectedString() {
+        // this testcase shows that toTitleCase only capitalizes the first letter of each word
+        assert Utils.toTitleCase("inviSible iTEM frAMe").equals("InviSible ITEM FrAMe");
+    }
+
+    @Test
+    void testToTitleCase_withEmptyString() {
+        // this testcase shows that toTitleCase is not error safe
+        assertThrows(StringIndexOutOfBoundsException.class, () -> Utils.toTitleCase("").isEmpty());
     }
 
 }

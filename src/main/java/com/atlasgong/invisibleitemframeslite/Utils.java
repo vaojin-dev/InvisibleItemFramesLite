@@ -44,7 +44,7 @@ public class Utils {
     }
 
     /**
-     * Converts a string to title case (capitalizing the first letter of each word).
+     * Converts a string to title case (beware: only capitalizes the first letter of each word).
      *
      * @param input The input string.
      * @return A string with each word capitalized.
@@ -54,6 +54,5 @@ public class Utils {
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
                 .collect(Collectors.joining(" "));
     }
-
 
 }
