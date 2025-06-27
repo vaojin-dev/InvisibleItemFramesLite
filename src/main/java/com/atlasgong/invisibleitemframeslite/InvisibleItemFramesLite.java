@@ -4,8 +4,9 @@ import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameBreakListener;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameCraftListener;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFrameInteractionListener;
 import com.atlasgong.invisibleitemframeslite.listeners.ItemFramePlaceListener;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -128,46 +129,93 @@ public class InvisibleItemFramesLite extends JavaPlugin {
         Bukkit.addRecipe(recipe);
     }
 
+    /**
+     * Holds structured data for an invisible item frame including name, lore, and enchantment glint status.
+     *
+     * @param name  The display name as a MiniMessage Component.
+     * @param lore  The list of lore lines as MiniMessage Components.
+     * @param glint Whether the item has the enchantment glint effect.
+     */
+    private record ItemFrameData(Component name, List<Component> lore, boolean glint) {
+    }
+
+    /**
+     * Loads frame data from a given configuration section, deserializing text using MiniMessage.
+     *
+     * @param section The configuration section containing the item's data.
+     * @return An {@link ItemFrameData} object containing the name, lore, and glint flag.
+     */
+    private ItemFrameData loadFrameData(ConfigurationSection section) {
+        // get name, lore, and glint from config
+        String name = section.getString("name");
+        List<String> lore = section.getStringList("lore");
+        boolean glint = section.getBoolean("enchantment_glint");
+
+        // translate strings to components
+        Component nameComponent = MiniMessage.miniMessage().deserialize(name);
+        List<Component> loreComponents = lore.stream()
+                .map(MiniMessage.miniMessage()::deserialize)
+                .toList();
+
+        return new ItemFrameData(nameComponent, loreComponents, glint);
+    }
+
+    /**
+     * Adds default configuration values for a specific invisible item frame type.
+     *
+     * @param config The plugin's configuration file.
+     * @param id     The identifier for the item type (e.g., "invisible_item_frame").
+     * @param type   The {@link Material} for the frame (e.g. Material.ITEM_FRAME).
+     */
+    private void addConfigDefaults(FileConfiguration config, String id, Material type) {
+        config.addDefault("items." + id + ".name", "Invisible " + Utils.toTitleCase(type.name().replace("_", " ")));
+        config.addDefault("recipes." + id + ".count", 8);
+        config.addDefault("recipes." + id + ".glint", true);
+        config.addDefault("recipes." + id + ".shape", Arrays.asList("FFF", "FAF", "FFF"));
+        config.addDefault("recipes." + id + ".ingredients.F", "minecraft:" + type.name());
+        config.addDefault("recipes." + id + ".ingredients.A", "minecraft:phantom_membrane");
+    }
+
+
+    /**
+     * Loads configuration data for invisible item frames, registers them with the item frame registry, and registers
+     * their crafting recipes with the server.
+     *
+     * @param IS_INVISIBLE_KEY The key used for identifying invisible item frames.
+     */
     public void loadConfig(NamespacedKey IS_INVISIBLE_KEY) {
         final FileConfiguration config = getConfig();
 
-        config.addDefault("items.invisible_item_frame.name", ChatColor.RESET + "Invisible Item Frame");
-        config.addDefault("recipes.invisible_item_frame.count", 8);
-        config.addDefault("recipes.invisible_item_frame.glint", true);
-        config.addDefault("recipes.invisible_item_frame.shape", Arrays.asList("FFF", "FAF", "FFF"));
-        config.addDefault("recipes.invisible_item_frame.ingredients.F", "minecraft:item_frame");
-        config.addDefault("recipes.invisible_item_frame.ingredients.A", "minecraft:phantom_membrane");
+        // add default config values for both item frame types
+        addConfigDefaults(config, "invisible_item_frame", Material.ITEM_FRAME);
+        addConfigDefaults(config, "invisible_glow_item_frame", Material.GLOW_ITEM_FRAME);
 
+        // load and register regular invisible item frame
         ConfigurationSection regularItem = config.getConfigurationSection("items.invisible_item_frame");
         assert regularItem != null;
-        String rName = regularItem.getString("name");
-        List<String> rLore = regularItem.getStringList("lore");
-        boolean rEnchantmentGlint = regularItem.getBoolean("enchantment_g" +
-                "lint");
+        ItemFrameData regData = loadFrameData(regularItem);
 
         // register frame with registry
-        ItemFrameRegistry.getInstance().registerRegularInvisibleItemFrame(IS_INVISIBLE_KEY, rName, rLore, rEnchantmentGlint);
+        ItemFrameRegistry.getInstance().registerRegularInvisibleItemFrame(
+                IS_INVISIBLE_KEY, regData.name(), regData.lore(), regData.glint()
+        );
 
+        // get and register the crafting recipe
         ConfigurationSection regularRecipe = config.getConfigurationSection("recipes.invisible_item_frame");
         assert regularRecipe != null;
         addRecipeFromConfig(REGULAR_RECIPE_KEY, regularRecipe, ItemFrameRegistry.getInstance().getRegularInvisibleFrame());
 
-        config.addDefault("items.invisible_glow_item_frame.name", ChatColor.RESET + "Invisible Glow Item Frame");
-        config.addDefault("recipes.invisible_glow_item_frame.count", 8);
-        config.addDefault("recipes.invisible_glow_item_frame.glint", true);
-        config.addDefault("recipes.invisible_glow_item_frame.shape", Arrays.asList("FFF", "FAF", "FFF"));
-        config.addDefault("recipes.invisible_glow_item_frame.ingredients.F", "minecraft:glow_item_frame");
-        config.addDefault("recipes.invisible_glow_item_frame.ingredients.A", "minecraft:phantom_membrane");
-
+        // load and register glow invisible item frame
         ConfigurationSection glowItem = config.getConfigurationSection("items.invisible_glow_item_frame");
         assert glowItem != null;
-        String gName = glowItem.getString("name");
-        List<String> gLore = glowItem.getStringList("lore");
-        boolean gEnchantmentGlint = glowItem.getBoolean("enchantment_glint");
+        ItemFrameData glowData = loadFrameData(glowItem);
 
         // register frame with registry
-        ItemFrameRegistry.getInstance().registerGlowInvisibleItemFrame(IS_INVISIBLE_KEY, gName, gLore, gEnchantmentGlint);
+        ItemFrameRegistry.getInstance().registerGlowInvisibleItemFrame(
+                IS_INVISIBLE_KEY, glowData.name(), glowData.lore(), glowData.glint()
+        );
 
+        // get and register the crafting recipe
         ConfigurationSection glowRecipe = config.getConfigurationSection("recipes.invisible_glow_item_frame");
         assert glowRecipe != null;
         addRecipeFromConfig(GLOW_RECIPE_KEY, glowRecipe, ItemFrameRegistry.getInstance().getGlowInvisibleFrame());

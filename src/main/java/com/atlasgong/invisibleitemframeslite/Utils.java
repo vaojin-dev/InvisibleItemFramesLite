@@ -7,6 +7,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class Utils {
 
     private Utils() {
@@ -39,5 +42,18 @@ public class Utils {
         return entity instanceof ItemFrame && entity.getPersistentDataContainer().has(isInvisibleKey,
                 PersistentDataType.BYTE);
     }
+
+    /**
+     * Converts a string to title case (capitalizing the first letter of each word).
+     *
+     * @param input The input string.
+     * @return A string with each word capitalized.
+     */
+    public static String toTitleCase(String input) {
+        return Arrays.stream(input.split(" "))
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1))
+                .collect(Collectors.joining(" "));
+    }
+
 
 }
