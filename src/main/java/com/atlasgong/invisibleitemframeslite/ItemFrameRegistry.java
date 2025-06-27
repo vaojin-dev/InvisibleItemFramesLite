@@ -1,5 +1,6 @@
 package com.atlasgong.invisibleitemframeslite;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +46,7 @@ public class ItemFrameRegistry {
      * @param lore             lore lines for the item
      * @param enchantmentGlint whether to apply an enchantment glint effect
      */
-    public void registerRegularInvisibleItemFrame(NamespacedKey isInvisibleKey, String name, List<String> lore,
+    public void registerRegularInvisibleItemFrame(NamespacedKey isInvisibleKey, Component name, List<Component> lore,
                                                   boolean enchantmentGlint) {
         regInvisibleFrame = create(isInvisibleKey, name, lore, enchantmentGlint, false);
     }
@@ -58,7 +59,7 @@ public class ItemFrameRegistry {
      * @param lore             lore lines for the item
      * @param enchantmentGlint whether to apply an enchantment glint effect
      */
-    public void registerGlowInvisibleItemFrame(NamespacedKey isInvisibleKey, String name, List<String> lore,
+    public void registerGlowInvisibleItemFrame(NamespacedKey isInvisibleKey, Component name, List<Component> lore,
                                                boolean enchantmentGlint) {
         glowInvisibleFrame = create(isInvisibleKey, name, lore, enchantmentGlint, true);
     }
@@ -91,7 +92,7 @@ public class ItemFrameRegistry {
      * @param glow             Whether to create a glow item frame instead of a regular item frame.
      * @return An invisible item frame.
      */
-    public ItemStack create(NamespacedKey isInvisibleKey, String name, List<String> lore,
+    public ItemStack create(NamespacedKey isInvisibleKey, Component name, List<Component> lore,
                             boolean enchantmentGlint, boolean glow) {
         Material type = glow ? Material.GLOW_ITEM_FRAME : Material.ITEM_FRAME;
         ItemStack item = new ItemStack(type, 1);
@@ -99,10 +100,9 @@ public class ItemFrameRegistry {
         ItemMeta meta = item.getItemMeta();
         Objects.requireNonNull(meta, "ItemMeta was unexpectedly null.");
 
-        meta.setDisplayName(name);
-        meta.setLore(lore);
-        meta.getPersistentDataContainer()
-                .set(isInvisibleKey, PersistentDataType.BYTE, (byte) 1);
+        meta.customName(name);
+        meta.lore(lore);
+        meta.getPersistentDataContainer().set(isInvisibleKey, PersistentDataType.BYTE, (byte) 1);
         meta.setEnchantmentGlintOverride(enchantmentGlint);
 
         item.setItemMeta(meta);
