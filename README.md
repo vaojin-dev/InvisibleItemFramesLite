@@ -1,16 +1,11 @@
 # InvisibleItemFramesLite
 
-> Forked from [InvisibleItemFrames](https://github.com/tiffany352/InvisibleItemFrames)
-> by [Tiffany Bennett (Tiffnix)](https://tiffnix.com/contact).
+> Forked from [InvisibleItemFrames](https://github.com/tiffany352/InvisibleItemFrames) by [Tiffany Bennett (Tiffnix)](https://tiffnix.com/contact).
 
 > [!IMPORTANT]
-> Spigot support will be dropped in `v3.0.0`. The last build to support Spigot
-> is [v2.0.0-beta.7](https://github.com/atlasgong/InvisibleItemFramesLite/releases/tag/v2.0.0-beta.7), and all
-> subsequent
-> builds will solely support Paper.
+> Spigot support will be dropped in `v3.0.0`. The last build to support Spigot is [v2.0.0-beta.7](https://github.com/atlasgong/InvisibleItemFramesLite/releases/tag/v2.0.0-beta.7), and all subsequent builds will solely support Paper.
 
-A fast, minimal Paper plugin that adds **craftable invisible item frames** to your server; no configuration required, no
-commands or permissions, just drop it in and go.
+A fast, minimal Paper plugin that adds **craftable invisible item frames** to your server; no configuration required, no commands or permissions, just drop it in and go.
 
 See a full video demo here: https://youtu.be/2kLfRHyH5cc
 
@@ -38,17 +33,14 @@ See a full video demo here: https://youtu.be/2kLfRHyH5cc
 
 ## Why This Version?
 
-This is an updated, stripped-down fork of the
-original [InvisibleItemFrames](https://www.spigotmc.org/resources/invisible-item-frames.85365/) plugin. Compared to the
-original:
+This is an updated, stripped-down fork of the original [InvisibleItemFrames](https://www.spigotmc.org/resources/invisible-item-frames.85365/) plugin. Compared to the original:
 
 - Lightweight performance; it's tiny, fast, and focused
 - Works right out of the box; no additional configuration is needed
 - Compatibility with newer Paper versions (1.21+)
 - Plenty of bug fixes
 
-No command trees. No permission spaghetti. Just craftable invisible item frames that feel like they could've been
-shipped natively with vanilla.
+No command trees. No permission spaghetti. Just craftable invisible item frames that feel like they could've been shipped natively with vanilla.
 
 ## Installation
 
@@ -59,14 +51,11 @@ shipped natively with vanilla.
 
 ## Migrating from v2 to v3
 
-Server admins are expected to update their configuration to replace any legacy chat formatting with Adventure's
-MiniMessage formatting: https://docs.advntr.dev/minimessage/format. Alternatively, if you wish, you may simply delete
-the config file and a fresh one will automatically be generated on the next server restart.
+Server admins are expected to update their configuration to replace any legacy chat formatting with Adventure's MiniMessage formatting: https://docs.advntr.dev/minimessage/format. Alternatively, if you wish, you may simply delete the config file and a fresh one will automatically be generated on the next server restart.
 
 ## Contributing
 
-Code is licensed under MPLv2, as per the original. See [LICENSE-MPL](./LICENSE-MPL) for details.
-Any contributions are assumed to be under this license.
+Code is licensed under MPLv2, as per the original. See [LICENSE-MPL](./LICENSE-MPL) for details. Any contributions are assumed to be under this license.
 
 0. **Prerequisites**
 
