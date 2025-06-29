@@ -11,8 +11,7 @@ import org.bukkit.inventory.ShapedRecipe;
 
 /**
  * Listener that controls crafting behavior for invisible item frames.
- * Enforces restrictions based on the "doLimitedCrafting" gamerule and prevents
- * recursive crafting using invisible item frames themselves.
+ * Blocks the ability to craft invisible item frames using themselves.
  */
 public class ItemFrameCraftListener implements Listener {
 
@@ -29,10 +28,7 @@ public class ItemFrameCraftListener implements Listener {
     }
 
     /**
-     * Intercepts crafting attempts to enforce custom behavior:
-     * - Blocks crafting invisible item frames using existing invisible item frames.
-     * - Enforces the "doLimitedCrafting" gamerule for the custom invisible frame recipe,
-     * since Spigot doesn't enforce it natively for custom recipes.
+     * Blocks the ability to craft invisible item frames using themselves.
      */
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
