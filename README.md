@@ -2,12 +2,9 @@
 
 > Forked from [InvisibleItemFrames](https://github.com/tiffany352/InvisibleItemFrames) by [Tiffany Bennett (Tiffnix)](https://tiffnix.com/contact).
 
-> [!IMPORTANT]
-> Spigot support will be dropped in `v3.0.0`. The last build to support Spigot is [v2.0.0-beta.7](https://github.com/atlasgong/InvisibleItemFramesLite/releases/tag/v2.0.0-beta.7), and all subsequent builds will solely support Paper.
-
 A fast, minimal Paper plugin that adds **craftable invisible item frames** to your server; no configuration required, no commands or permissions, just drop it in and go.
 
-See a full video demo here: https://youtu.be/2kLfRHyH5cc
+See a [video demo](https://youtu.be/2kLfRHyH5cc), and the [gallery](https://modrinth.com/plugin/invisibleitemframes/gallery).
 
 <table width="100%">
   <tr>
