@@ -93,18 +93,19 @@ public class ItemFrameInteractionListener implements Listener, PluginMessageList
         RayTraceResult rayTrace = p.getWorld().rayTraceEntities(
                 p.getEyeLocation(),
                 p.getEyeLocation().getDirection(),
-                5.0,
-                0.1, // Ray thickness
+                5, // distance
+                0.0, // thickness
                 entity -> entity instanceof ItemFrame && Utils.isInvisibleItemFrame(entity, isInvisibleKey)
         );
-
+    
         if (rayTrace != null && rayTrace.getHitEntity() != null) {
             ItemFrame frame = (ItemFrame) rayTrace.getHitEntity();
-
             BlockFace attachedFace = frame.getAttachedFace();
             Block mount = frame.getLocation().getBlock().getRelative(attachedFace);
-
+    
             if (mount.getState() instanceof Container container) {
+                p.swingMainHand();
+    
                 p.openInventory(container.getInventory());
             }
         }
