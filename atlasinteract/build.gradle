@@ -1,0 +1,60 @@
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+}
+
+version = "${project.mod_version}+${project.minecraft_version}"
+group = project.maven_group
+
+base {
+    archivesName = project.archive_base_name
+}
+
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "atlasinteract" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+def modVersion = project.version
+def minecraftVersion = project.minecraft_version
+def loaderVersion = project.loader_version
+
+processResources {
+    inputs.property "version", modVersion
+    inputs.property "minecraft_version", minecraftVersion
+    inputs.property "loader_version", loaderVersion
+
+    filteringCharset = 'UTF-8'
+
+    filesMatching("fabric.mod.json") {
+        expand(
+            "version": modVersion,
+            "minecraft_version": minecraftVersion,
+            "loader_version": loaderVersion
+        )
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+    it.options.encoding = "UTF-8"
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
