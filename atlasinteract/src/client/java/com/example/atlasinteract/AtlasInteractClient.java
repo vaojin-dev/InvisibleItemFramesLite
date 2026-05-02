@@ -10,6 +10,6 @@ public class AtlasInteractClient implements ClientModInitializer {
     public void onInitializeClient() {
         AtlasInteract.LOGGER.info("[AtlasInteract] Client Initialized.");
         
-        PayloadTypeRegistry.playC2S().register(EmptyClickPayload.TYPE, EmptyClickPayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(EmptyClickPayload.TYPE, EmptyClickPayload.CODEC);
     }
 }
